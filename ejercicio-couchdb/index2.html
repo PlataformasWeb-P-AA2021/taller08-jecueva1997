@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Demo Jquery y JqueryUI</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!--link rel="stylesheet" href="estilos/estilos.css" type="text/css" /-->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="https:/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
-    
       <h1>Ejemplo de Uso de Jquery + CouchDB</h1>
-
+      <!--creacion de etiquetas para el llamado en ajax y envio de datos-->
+      <div id="tabs">
+        <ul id="lu">
+        </ul>
+      </div>
   </body>
   <script>
     $(document).ready(function() {
@@ -20,9 +22,27 @@
             dataType: 'json',
             url: "http://127.0.0.1:5984/mundial2018/_all_docs?include_docs=True"
             }).then(function(data) {
-              
-              
-
+              // Ciclo repetitivo para correr por todos los datos en el json
+              for(var i=0; i<data.rows.length; i++){
+                // If para validar los datos que se encuentren en Argentina
+                if(data.rows[i].doc.Country=="Argentina"){
+                  // Concatenacion de el nombre y apellido de los jugadores de Argentina
+                  var cadena = data.rows[i].doc.FirstName + " " + data.rows[i].doc.LastName;
+                  // Concatenació de los valores a presentar con encabezados 
+                  var info =  "Número: " + data.rows[i].doc.Numero + "<br>" +" " + "Nombre de la Camiseta: " + data.rows[i].doc.FIFADisplayName + 
+                  "<br>" + "Nombre del Jugador: " + data.rows[i].doc.LastName + "<br>" + " " + "Apellido del Jugador: " + data.rows[i].doc.FirstName + 
+                  "<br>" + " " + "Posición: " + data.rows[i].doc.POS ;
+                  // envio a las etiquetas html correspondientes
+                  cadena1 = '<li> <a href="#tabs'+i+'">' + cadena + '</a></li>'; 
+                  cadena2 = '<div id ="tabs'+i+'"><p>' + cadena + "</p><p>" + info + '</p></div>';
+                  // Agregacion de los datos a las etiquedas de los id correspondientes 
+                  $('#lu').append(cadena1)
+                  $('#tabs').append(cadena2)
+                }
+              }
+              $( function() {
+                $( "#tabs" ).tabs();
+              });
             });
     });
   </script>
